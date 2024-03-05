@@ -13,7 +13,7 @@ from langchain.chains.combine_documents import create_stuff_documents_chain
 import os
 
 load_dotenv()
-api_key = os.getenv('OPENAI_API_KEY')
+# api_key = os.getenv('OPENAI_API_KEY')
 
 def get_vectorstore_from_url(url):
     # get the text in document form
