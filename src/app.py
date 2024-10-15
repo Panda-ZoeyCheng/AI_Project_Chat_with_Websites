@@ -41,7 +41,14 @@ if clear_button:
     ]
 
 def create_plot_from_response(response_text):
-    [eval(statement) for statement in response_text.split("\n")]
+    # [eval(statement) for statement in response_text.split("\n")]
+        for statement in response_text.split("\n"):
+            statement = statement.strip()
+            if statement:
+                try:
+                    eval(statement)
+                except Exception as e:
+                    st.error(f"Error executing statement: {statement}\n{e}")
 
 def generate_response(query):
     st.session_state["messages"].append({"role": "user", "content": query})
