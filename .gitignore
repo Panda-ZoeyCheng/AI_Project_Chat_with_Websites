@@ -1,3 +1,5 @@
 .env
 
 .streamlit/
+
+./utils/__pycache__
