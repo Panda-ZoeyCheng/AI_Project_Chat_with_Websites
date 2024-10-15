@@ -164,7 +164,7 @@ def create_plot_from_response(response_text):
     [eval(statement) for statement in response_text.split("\n")]
 
 def generate_response(query):
-    st.session_state["message"].append({"role": "user", "content": query})
+    st.session_state["messages"].append({"role": "user", "content": query})
     prompt = f""" You are a matplotlib and seaborn expert.
     You answer questions related to data
     Your also write code for creating visualization charts based on input query.
