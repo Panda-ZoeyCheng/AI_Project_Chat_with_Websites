@@ -81,15 +81,14 @@ def generate_response(query):
             {"role": "user", "content": prompt}
         ],
         stream = True,
-        temperature = 0.7,
-        max_tokens = 250
+        temperature = 0.7
     )
 
     full_response = ""
     for chunk in response:
-        chunk_content = chunk["choices"][0].get("delta, {}").get("content", "")
+        chunk_content = chunk.choices[0].delta.get("content", "")
         full_response += chunk_content
-        st.write(chunk_content)
+    
 
     # global response
 
