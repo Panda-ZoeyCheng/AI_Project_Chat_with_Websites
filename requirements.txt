@@ -1,6 +1,7 @@
 streamlit
-opeanai
+streamlit-chat
 pandas
 matplotlib
 seaborn
-plotly
+Pillow
+openai
