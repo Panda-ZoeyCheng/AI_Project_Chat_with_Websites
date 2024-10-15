@@ -64,30 +64,46 @@ def generate_response(query):
         plt.title(<suitable-chart-name>)
         plt.savefig(<image-name>)
     Else give the answser to the query in code
-
-    Query: """
-
-    end_prompt = "\nResult:"
-
-    full_prompt = prompt + query + end_prompt
-
-    completion_params = {"temperature": 0.7, "max_tokens":250, "model": "text-davinci-003"}
-
-    completion = openai.Completion.create(prompt=full_prompt, **completion_params)
-
-    global response
-
-    response = completion["choices"][0]["text"].strip("\n")
-
-    if "plt" in response:
-        create_plot_from_response(response)
-        st.session_state["graph"].append(Image.open("/plot.png"))
-        response = "Chart is shown below"
-    else:
-        st.session_state["graph"].append("no image")
-        response = response
     
-    st.session_state["messages"].append({"role": "assistant", "content":response})
+    Query: {query}
+
+    Result:"""
+
+
+    # completion_params = {"temperature": 0.7, "max_tokens":250, "model": "text-davinci-003"}
+
+    # completion = openai.Completion.create(prompt=full_prompt, **completion_params)
+
+    response = openai.chat.completions.create(
+        model = model_name,
+        messages=[
+            {"role": "system", "content": "You are a helpful assistant."},
+            {"role": "user", "content": prompt}
+        ],
+        stream = True,
+        temperature = 0.7,
+        max_tokens = 250
+    )
+
+    full_response = ""
+    for chunk in response:
+        chunk_content = chunk["choices"][0].get("delta, {}").get("content", "")
+        full_response += chunk_content
+        st.write(chunk_content)
+
+    # global response
+
+    # response = completion["choices"][0]["text"].strip("\n")
+
+    if "plt" in full_response:
+        create_plot_from_response(full_response)
+        st.session_state["graph"].append(Image.open("/plot.png"))
+        full_response = "Chart is shown below"
+    else:
+        st.session_state["graph"].append(None)
+        # response = response
+    
+    st.session_state["messages"].append({"role": "assistant", "content": full_response})
 
 response_container = st.container()
 container = st.container()
