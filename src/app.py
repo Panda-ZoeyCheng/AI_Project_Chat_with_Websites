@@ -86,8 +86,9 @@ def generate_response(query):
 
     full_response = ""
     for chunk in response:
-        chunk_content = chunk.choices[0].delta.get("content", "")
-        full_response += chunk_content
+        chunk_content = chunk.choices[0].delta.content
+        if chunk_content:
+            full_response += chunk_content
     
 
     # global response
