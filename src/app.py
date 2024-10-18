@@ -154,12 +154,13 @@ def display_messages():
             else:
                 st.markdown(message["content"])
 
-input = st.chat_message("Please describe what graph you would like to show?")
+input = st.chat_input("Please describe what graph you would like to show?")
 
 if input:
+    st.session_state["messages"].append({"role": "user", "content": input})
     with st.chat_message("user"):
         st.markdown(input)
-    st.session_state.message.append({"role": "user", "content": input})
+    # st.session_state.message.append({"role": "user", "content": input})
 
     with st.chat_message("assistant"):
         message_placeholder = st.empty()
