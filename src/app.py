@@ -42,13 +42,14 @@ model_name = 'gpt-3.5-turbo'
 if clear_button:
     st.session_state["generated"] = []
     st.session_state["past"] = []
+    st.session_state["graph"] = []
     st.session_state["messages"] = [
         {"role": "system", "content": "You are a helpful assistant"}
     ]
 
-plot_folder = os.path.join(os.getcwd(), "src", "plots")
-if not os.path.exists(plot_folder):
-    os.makedirs(plot_folder) 
+# plot_folder = os.path.join(os.getcwd(), "src", "plots")
+# if not os.path.exists(plot_folder):
+#     os.makedirs(plot_folder) 
 
 def create_plot_from_response(response_text):
     # [eval(statement) for statement in response_text.split("\n")]
@@ -148,16 +149,18 @@ def generate_response(query):
 
 def display_messages():
     for message in st.session_state["messages"]:
-        with st.chat_message(message["role"]):
-            if message["role"] == "graph":
-                st.image(message["content"], width=700)
-            else:
-                st.markdown(message["content"])
+        if message["role"] != "system":
+            with st.chat_message(message["role"]):
+                if message["role"] == "graph":
+                    st.image(message["content"], width=700)
+                else:
+                    st.markdown(message["content"])
 
-input = st.chat_input("Please describe what graph you would like to show?")
+input = st.chat_input("Please describe what graph you would like to show:")
 
 if input:
     st.session_state["messages"].append({"role": "user", "content": input})
+
     with st.chat_message("user"):
         st.markdown(input)
     # st.session_state.message.append({"role": "user", "content": input})
