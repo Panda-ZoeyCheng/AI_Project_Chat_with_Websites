@@ -13,7 +13,7 @@ openai.api_key = st.secrets["OPENAI_API_KEY"]
 st.set_page_config(page_title="PlotBot", page_icon=":robot_face:")
 st.markdown("<h1 style='text-align: center;'>PlotBot</h1>", unsafe_allow_html=True)
 
-upload_file = st.file_uploader("Upload CSV file", type="csv")
+upload_file = st.sidebar.file_uploader("Upload CSV file", type="csv")
 if upload_file is not None:
     df = pd.read_csv(upload_file)
     schema = df.dtypes.to_string()
@@ -122,8 +122,8 @@ def generate_response(query):
     if "```" in full_response:
         full_response = full_response.replace("```", "")
     
-    st.write("Generated code:")
-    st.code(full_response, language="python")
+    # st.write("Generated code:")
+    # st.code(full_response, language="python")
 
     if "plt" in full_response:
         create_plot_from_response(full_response)
@@ -157,13 +157,13 @@ with container:
 if st.session_state["generated"]:
     with response_container:
         for i in range(len(st.session_state["generated"])):
-            message(st.session_state["past"][i], is_user=True, key=str(i) + '_user')
-            message(st.session_state["generated"][i], key=str(i))
+            message(st.session_state["past"][i], is_user=True, key=str(i) + '_user', avatar_style="identicon")
+            message(st.session_state["generated"][i], key=str(i), avatar_style="bottts")
 
             try:
                 # st.image(st.session_state["graph"][i], width=10)
                 if st.session_state["graph"][i]:
-                    st.image(st.session_state["graph"][i])
+                    st.image(st.session_state["graph"][i], width=700)
                 else:
                     st.warning("No image to display.")
             except Exception as e:
