@@ -249,13 +249,21 @@ def generate_plot_code(df, user_request):
     response = openai.chat.completions.create(
         # engine=st.session_state["openai_model"],
         model = "gpt-3.5-turbo",
-        prompt=prompt,
-        # max_tokens=150,
-        temperature=0.7
+        messages=[{"role": "user", "content": prompt}],
+        stream = True,
+        temperature=0.7,
     )
+
+    full_response = ""
+    for chunk in response:
+        chunk_content = chunk.choices[0].delta.content
+        if chunk_content:
+            full_response += chunk_content
+
+    return full_response
     
-    plot_code = response.choices[0].text.strip()
-    return plot_code
+    # plot_code = response.choices[0].text.strip()
+    # return plot_code
 
 # Function to execute the generated code
 def execute_plot_code(plot_code):
