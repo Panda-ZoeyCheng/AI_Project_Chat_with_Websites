@@ -198,4 +198,4 @@ if input:
 #             except Exception as e:
 #                 st.error(f"Error displaying image: {e}")
 
-display_messages()
+# display_messages()
