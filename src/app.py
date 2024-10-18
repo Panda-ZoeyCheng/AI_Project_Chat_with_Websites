@@ -109,6 +109,11 @@ def generate_response(query):
         chunk_content = chunk.choices[0].delta.content
         if chunk_content:
             full_response += chunk_content
+
+    if "```python" in full_response:
+        full_response = full_response.replace("```python", "")
+    if "```" in full_response:
+        full_response = full_response.replace("```", "")
     
     st.write("Generated code:")
     st.code(full_response, language="python")
@@ -116,7 +121,7 @@ def generate_response(query):
     if "plt" in full_response:
         create_plot_from_response(full_response)
         # st.session_state["graph"].append(Image.open("/plot.png"))
-        image_path = os.path.join(os.getcwd(), "plot.png")
+        image_path = os.path.join(os.getcwd(), "src", "plots", "plot.png")
         st.write(f"Image path: {image_path}")
 
         if os.path.exists(image_path):
