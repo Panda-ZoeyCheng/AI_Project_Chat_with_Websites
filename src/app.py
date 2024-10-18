@@ -43,6 +43,10 @@ if clear_button:
         {"role": "system", "content": "You are a helpful assistant"}
     ]
 
+plot_folder = os.path.join(os.getcwd(), "src", "plots")
+if not os.path.exists(plot_folder):
+    os.makedirs(plot_folder) 
+
 def create_plot_from_response(response_text):
     # [eval(statement) for statement in response_text.split("\n")]
     # for statement in response_text.split("\n"):
@@ -56,6 +60,10 @@ def create_plot_from_response(response_text):
     local_vars = {"df": df, "plt": plt, "sns": sns}
     try:
         exec(response_text, globals(), local_vars)
+        image_path = os.path.join(plot_folder, "plot.png")
+        plt.savefig("plot.png")
+        plt.close()
+        st.write(f"Image saved at: {image_path}")
     except Exception as e:
         st.error(f"Error executing generated code: {e}")
 
@@ -102,13 +110,18 @@ def generate_response(query):
         if chunk_content:
             full_response += chunk_content
     
+    st.write("Generated code:")
+    st.code(full_response, language="python")
 
     if "plt" in full_response:
         create_plot_from_response(full_response)
         # st.session_state["graph"].append(Image.open("/plot.png"))
         image_path = os.path.join(os.getcwd(), "plot.png")
-        st.session_state["graph"].append(Image.open(image_path))
-        full_response = "Chart is shown below"
+        st.write(f"Image path: {image_path}")
+
+        if os.path.exists(image_path):
+            st.session_state["graph"].append(Image.open(image_path))
+            full_response = "Chart is shown below"
     else:
         st.session_state["graph"].append(None)
     
