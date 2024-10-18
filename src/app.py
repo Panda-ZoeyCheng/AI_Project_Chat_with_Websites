@@ -1,4 +1,5 @@
 import os
+import io
 import streamlit as st
 from streamlit_chat import message
 import pandas as pd
@@ -49,23 +50,28 @@ if not os.path.exists(plot_folder):
 
 def create_plot_from_response(response_text):
     # [eval(statement) for statement in response_text.split("\n")]
-    # for statement in response_text.split("\n"):
-    #     statement = statement.strip()
-    #     if statement and not statement.startswith("```"):
-    #         try:
-    #             eval(statement)
-    #         except Exception as e:
-    #             st.error(f"Error executing statement: {statement}\n{e}")
+    for statement in response_text.split("\n"):
+        statement = statement.strip()
+        if statement and not statement.startswith("```"):
+            try:
+                eval(statement)
+            except Exception as e:
+                st.error(f"Error executing statement: {statement}\n{e}")
 
-    local_vars = {"df": df, "plt": plt, "sns": sns}
-    try:
-        exec(response_text, globals(), local_vars)
-        image_path = os.path.join(plot_folder, "plot.png")
-        plt.savefig("plot.png")
-        plt.close()
-        st.write(f"Image saved at: {image_path}")
-    except Exception as e:
-        st.error(f"Error executing generated code: {e}")
+    buf = io.BytesIO()
+    plt.savefig(buf, format='png')
+    buf.seek(0)
+    st.session_state["graph"].append(buf)
+
+    # local_vars = {"df": df, "plt": plt, "sns": sns}
+    # try:
+    #     exec(response_text, globals(), local_vars)
+    #     image_path = os.path.join(plot_folder, "plot.png")
+    #     plt.savefig("plot.png")
+    #     plt.close()
+    #     st.write(f"Image saved at: {image_path}")
+    # except Exception as e:
+    #     st.error(f"Error executing generated code: {e}")
 
 def generate_response(query):
     st.session_state["messages"].append({"role": "user", "content": query})
@@ -120,13 +126,14 @@ def generate_response(query):
 
     if "plt" in full_response:
         create_plot_from_response(full_response)
-        # st.session_state["graph"].append(Image.open("/plot.png"))
-        image_path = os.path.join(os.getcwd(), "src", "plots", "plot.png")
-        st.write(f"Image path: {image_path}")
+        # image_path = os.path.join(os.getcwd(), "src", "plots", "plot.png")
+        # st.write(f"Image path: {image_path}")
 
-        if os.path.exists(image_path):
-            st.session_state["graph"].append(Image.open(image_path))
-            full_response = "Chart is shown below"
+        full_response = "Chart is shown below"
+
+        # if os.path.exists(image_path):
+        #     st.session_state["graph"].append(Image.open(image_path))
+        #     full_response = "Chart is shown below"
     else:
         st.session_state["graph"].append(None)
     
