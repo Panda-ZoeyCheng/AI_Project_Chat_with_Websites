@@ -45,13 +45,19 @@ if clear_button:
 
 def create_plot_from_response(response_text):
     # [eval(statement) for statement in response_text.split("\n")]
-        for statement in response_text.split("\n"):
-            statement = statement.strip()
-            if statement and not statement.startswith("```"):
-                try:
-                    eval(statement)
-                except Exception as e:
-                    st.error(f"Error executing statement: {statement}\n{e}")
+    # for statement in response_text.split("\n"):
+    #     statement = statement.strip()
+    #     if statement and not statement.startswith("```"):
+    #         try:
+    #             eval(statement)
+    #         except Exception as e:
+    #             st.error(f"Error executing statement: {statement}\n{e}")
+
+    local_vars = {"df": df, "plt": plt, "sns": sns}
+    try:
+        exec(response_text, globals(), local_vars)
+    except Exception as e:
+        st.error(f"Error executing generated code: {e}")
 
 def generate_response(query):
     st.session_state["messages"].append({"role": "user", "content": query})
