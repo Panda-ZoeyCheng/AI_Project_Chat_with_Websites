@@ -18,6 +18,9 @@ if upload_file is not None:
     schema = df.dtypes.to_string()
     query = None
 
+
+if "past" not in st.session_state:
+    st.session_state["past"] = []
 if "generated" not in st.session_state:
     st.session_state["generated"] = []
 if "graph" not in st.session_state:
