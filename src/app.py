@@ -32,7 +32,7 @@ if upload_file is not None:
     schema = df.dtypes.to_string()
     query = None
 
-counter_placeholder = st.sidebar.empty()
+# counter_placeholder = st.sidebar.empty()
 clear_button = st.sidebar.button("Clear conversation", key="clear")
 
 
@@ -170,7 +170,7 @@ if input:
         full_response = generate_response(input)
         message_placeholder.markdown(full_response)
 
-    st.session_state["messages"].append({"role": "assistant", "content": full_response})
+    # st.session_state["messages"].append({"role": "assistant", "content": full_response})
 
 # with container:
 #     with st.form(key="my_form", clear_on_submit=True):
