@@ -249,7 +249,10 @@ def generate_plot_code(df, user_request):
     response = openai.chat.completions.create(
         # engine=st.session_state["openai_model"],
         model = "gpt-3.5-turbo",
-        messages=[{"role": "user", "content": prompt}],
+        messages=[
+            {"role": "system", "content": "You are a helpful assistant."},
+            {"role": "user", "content": prompt}
+            ],
         stream = True,
         temperature=0.7,
     )
