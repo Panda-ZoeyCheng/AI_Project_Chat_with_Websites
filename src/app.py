@@ -44,7 +44,7 @@ def create_plot_from_response(response_text):
     # [eval(statement) for statement in response_text.split("\n")]
         for statement in response_text.split("\n"):
             statement = statement.strip()
-            if statement:
+            if statement and not statement.startswith("```"):
                 try:
                     eval(statement)
                 except Exception as e:
@@ -77,10 +77,6 @@ def generate_response(query):
     Result:"""
 
 
-    # completion_params = {"temperature": 0.7, "max_tokens":250, "model": "text-davinci-003"}
-
-    # completion = openai.Completion.create(prompt=full_prompt, **completion_params)
-
     response = openai.chat.completions.create(
         model = model_name,
         messages=[
@@ -98,17 +94,14 @@ def generate_response(query):
             full_response += chunk_content
     
 
-    # global response
-
-    # response = completion["choices"][0]["text"].strip("\n")
-
     if "plt" in full_response:
         create_plot_from_response(full_response)
-        st.session_state["graph"].append(Image.open("/plot.png"))
+        # st.session_state["graph"].append(Image.open("/plot.png"))
+        image_path = os.path.join(os.getcwd(), "plot.png")
+        st.session_state["graph"].append(Image.open(image_path))
         full_response = "Chart is shown below"
     else:
         st.session_state["graph"].append(None)
-        # response = response
     
     st.session_state["messages"].append({"role": "assistant", "content": full_response})
 
