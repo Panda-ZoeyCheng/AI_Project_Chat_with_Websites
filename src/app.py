@@ -60,6 +60,7 @@ def create_plot_from_response(response_text):
 
     buf = io.BytesIO()
     plt.savefig(buf, format='png')
+    plt.show()
     buf.seek(0)
     st.session_state["graph"].append(buf)
 
@@ -160,6 +161,10 @@ if st.session_state["generated"]:
             message(st.session_state["generated"][i], key=str(i))
 
             try:
-                st.image(st.session_state["graph"][i], width=10)
-            except:
-                pass
+                # st.image(st.session_state["graph"][i], width=10)
+                if st.session_state["graph"][i]:
+                    st.image(st.session_state["graph"][i])
+                else:
+                    st.warning("No image to display.")
+            except Exception as e:
+                st.error(f"Error displaying image: {e}")
