@@ -5,3 +5,4 @@ matplotlib==3.7.1
 seaborn==0.12.2
 Pillow==9.4.0
 openai==1.51.2
+Plotly==5.9.0
