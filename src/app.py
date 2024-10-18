@@ -246,10 +246,11 @@ def generate_plot_code(df, user_request):
     Please generate the plot code in Python:
     """
     
-    response = openai.Completion.create(
-        engine=st.session_state["openai_model"],
+    response = openai.chat.completions.create(
+        # engine=st.session_state["openai_model"],
+        model = "gpt-3.5-turbo",
         prompt=prompt,
-        max_tokens=150,
+        # max_tokens=150,
         temperature=0.7
     )
     
