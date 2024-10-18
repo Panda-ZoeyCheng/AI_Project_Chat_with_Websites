@@ -263,6 +263,11 @@ def generate_plot_code(df, user_request):
         if chunk_content:
             full_response += chunk_content
 
+    if "```python" in full_response:
+        full_response = full_response.replace("```python", "")
+    if "```" in full_response:
+        full_response = full_response.replace("```", "")
+
     return full_response
     
     # plot_code = response.choices[0].text.strip()
