@@ -165,8 +165,8 @@
 #     st.session_state["messages"] = []
 
 import streamlit as st
-from plotbot import plotbot_page
-from admin import admin_page
+from plotbot.plotbot import plotbot_page
+from admin.admin import admin_page
 from settings import settings_page
 
 if "role" not in st.session_state:
