@@ -57,29 +57,34 @@ def generate_plot_code(df, user_request):
     Please generate the plot code in Python:
     """
     
-    response = openai.chat.completions.create(
-        # engine=st.session_state["openai_model"],
-        model = "gpt-3.5-turbo",
-        messages=[
-            {"role": "system", "content": "You are a helpful assistant."},
-            {"role": "user", "content": prompt}
-            ],
-        stream = True,
-        temperature=0.7,
-    )
+    try:
+        response = openai.chat.completions.create(
+            # engine=st.session_state["openai_model"],
+            model = "gpt-3.5-turbo",
+            messages=[
+                {"role": "system", "content": "You are a helpful assistant."},
+                {"role": "user", "content": prompt}
+                ],
+            stream = True,
+            temperature=0.7,
+        )
 
-    full_response = ""
-    for chunk in response:
-        chunk_content = chunk.choices[0].delta.content
-        if chunk_content:
-            full_response += chunk_content
+        full_response = ""
+        for chunk in response:
+            chunk_content = chunk.choices[0].delta.content
+            if chunk_content:
+                full_response += chunk_content
 
-    if "```python" in full_response:
-        full_response = full_response.replace("```python", "")
-    if "```" in full_response:
-        full_response = full_response.replace("```", "")
-
-    return full_response
+        if "```python" in full_response:
+            full_response = full_response.replace("```python", "")
+        if "```" in full_response:
+            full_response = full_response.replace("```", "")
+            
+        return full_response
+    
+    except Exception as e:
+        st.error(f"Error in generating plot code: {e}")
+        return None
     
 
 # Function to execute the generated code
@@ -99,19 +104,24 @@ def execute_plot_code(plot_code):
 
 # Function to generate a response based on user input
 def generate_response(prompt):
-    response = openai.chat.completions.create(
-        model=st.session_state["openai_model"],
-        messages=[{"role": "user", "content": prompt}],
-        stream=True,
-        temperature=0.7,
-    )
+    try:
+        response = openai.chat.completions.create(
+            model=st.session_state["openai_model"],
+            messages=[{"role": "user", "content": prompt}],
+            stream=True,
+            temperature=0.7,
+        )
+        
+        full_response = ""
+        for chunk in response:
+            chunk_content = chunk.choices[0].delta.content
+            if chunk_content:
+                full_response += chunk_content
+        return full_response
     
-    full_response = ""
-    for chunk in response:
-        chunk_content = chunk.choices[0].delta.content
-        if chunk_content:
-            full_response += chunk_content
-    return full_response
+    except Exception as e:
+        st.error(f"Error in generating response: {e}")
+        return None
 
 
 # Accept user input for custom plot request
