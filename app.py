@@ -178,7 +178,6 @@ def login():
         st.session_state.role = role
         st.rerun()
 
-
 def logout():
     st.session_state.role = None
     st.rerun()
