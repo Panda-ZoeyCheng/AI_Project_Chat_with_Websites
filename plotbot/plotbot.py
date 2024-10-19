@@ -32,6 +32,13 @@ if upload_file is not None:
 else:
     df = None
 
+def logout():
+    st.session_state.clear()
+    st.experimental_rerun()
+
+if st.sidebar.button("Logout"):
+    logout()
+
 # Display chat messages from history
 for message in st.session_state["messages"]:
     with st.chat_message(message["role"]):
