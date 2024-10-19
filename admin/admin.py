@@ -1,3 +1,4 @@
 import streamlit as st
 
-st.title("Admin Page")
+st.header("Admin")
+st.write(f"You are logged in as {st.session_state.role}.")

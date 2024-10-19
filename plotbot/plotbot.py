@@ -9,6 +9,9 @@ from PIL import Image
 import openai
 import plotly.express as px
 
+st.header("User")
+st.write(f"You are logged in as {st.session_state.role}.")
+
 openai.api_key = st.secrets["OPENAI_API_KEY"]
 
 st.set_page_config(page_title="PlotBot", page_icon=":robot_face:")

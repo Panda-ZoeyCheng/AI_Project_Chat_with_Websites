@@ -1,4 +1,4 @@
-streamlit==1.31.1
+streamlit==1.39.0
 streamlit-chat
 pandas==1.5.3
 matplotlib==3.7.1
