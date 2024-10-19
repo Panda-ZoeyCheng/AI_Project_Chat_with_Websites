@@ -79,7 +79,7 @@ def generate_plot_code(df, user_request):
             full_response = full_response.replace("```python", "")
         if "```" in full_response:
             full_response = full_response.replace("```", "")
-            
+
         return full_response
     
     except Exception as e:
@@ -151,12 +151,11 @@ if user_input and df is not None:
                     st.plotly_chart(plot_fig, use_container_width=True)
                 else:
                     st.error("Failed to generate the plot.")
-        else:
-            st.error("Please upload a CSV file to create a plot.")
-    else:
-        response = generate_response(input)
 
+    else:
+        
         with st.chat_message("assistant"):
+            response = "Please upload a CSV file to create a plot"
             st.session_state["messages"].append({"role": "assistant", "content": response})
             st.markdown(response)
 
