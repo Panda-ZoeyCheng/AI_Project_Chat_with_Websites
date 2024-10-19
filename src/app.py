@@ -96,8 +96,26 @@ def execute_plot_code(plot_code):
         st.error(f"Error executing the plot code: {e}")
         return None
 
+
+# Function to generate a response based on user input
+def generate_response(prompt):
+    response = openai.chat.completions.create(
+        model=st.session_state["openai_model"],
+        messages=[{"role": "user", "content": prompt}],
+        stream=True,
+        temperature=0.7,
+    )
+    
+    full_response = ""
+    for chunk in response:
+        chunk_content = chunk.choices[0].delta.content
+        if chunk_content:
+            full_response += chunk_content
+    return full_response
+
+
 # Accept user input for custom plot request
-user_input = st.chat_input("Please describe the plot you want to create, e.g., 'scatter plot of X vs Y'")
+user_input = st.chat_input("Please describe what you want to know or create")
 
 if user_input and df is not None:
     st.session_state["messages"].append({"role": "user", "content": user_input})
@@ -105,22 +123,33 @@ if user_input and df is not None:
     with st.chat_message("user"):
         st.markdown(user_input)
 
-    # Generate plot code from LLM based on user input
-    plot_code = generate_plot_code(df, user_input)
+    if any(keyword in user_input.lower() for keyword in ["plot", "chart", "graph"]):
+        if df is not None:
+            # Generate plot code from LLM based on user input
+            plot_code = generate_plot_code(df, user_input)
 
-    # Display the generated code (for debugging)
-    st.code(plot_code, language='python')
+            # Display the generated code (for debugging)
+            st.code(plot_code, language='python')
 
-    # Execute the generated plot code
-    plot_fig = execute_plot_code(plot_code)
+            # Execute the generated plot code
+            plot_fig = execute_plot_code(plot_code)
 
-    # Display the plot in the assistant message container
-    with st.chat_message("assistant"):
-        if plot_fig:
-            st.session_state["messages"].append({"role": "assistant", "plot": plot_fig})
-            st.plotly_chart(plot_fig, use_container_width=True)
+            # Display the plot in the assistant message container
+            with st.chat_message("assistant"):
+                if plot_fig:
+                    st.session_state["messages"].append({"role": "assistant", "plot": plot_fig})
+                    st.plotly_chart(plot_fig, use_container_width=True)
+                else:
+                    st.error("Failed to generate the plot.")
         else:
-            st.error("Failed to generate the plot.")
+            st.error("Please upload a CSV file to create a plot.")
+    else:
+        response = generate_response(input)
+
+        with st.chat_message("assistant"):
+            st.session_state["messages"].append({"role": "assistant", "content": response})
+            st.markdown(response)
+
 
 # Clear the messages
 if st.sidebar.button("Clear Conversation"):
