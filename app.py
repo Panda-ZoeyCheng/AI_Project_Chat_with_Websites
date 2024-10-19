@@ -172,23 +172,27 @@ if "role" not in st.session_state:
 ROLES = [None, "User", "Admin"]
 
 def login():
-    st.session_state.role = None
-    st.experimental_rerun()
+    st.header("Log in")
+    role = st.selectbox("Choose your role", ROLES)
+    if st.button("Log in"):
+        st.session_state.role = role
+        st.rerun()
 
 
 def logout():
     st.session_state.role = None
-    st.experimental_rerun()
+    st.rerun()
 
 role = st.session_state.role
 
 logout_page = st.Page(logout, title="Log out", icon=":material/logout:")
+settings = st.Page("settings.py", title="Settings", icon=":material/settings:")
 plotbot_page = st.Page("plotbot/plotbot.py", title="PlotBot", icon=":material/bar_chart:", default=(role == "User"))
 admin_page = st.Page("admin/admin.py", title="Admin Panel", icon=":material/settings:", default=(role == "Admin"))
 
-account_pages = [logout_page]
-user_pages = [plotbot_page]
-admin_pages = [admin_page]
+account_pages = [logout_page, settings]
+user_pages = [logout_page, plotbot_page]
+admin_pages = [logout_page, admin_page]
 
 st.title("Dynamic Navigation Example")
 
