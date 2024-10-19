@@ -1,4 +1,5 @@
 import stramlit as st
 
-st.header("Settings")
-st.write(f"You are logged in as {st.session_state.role}.")
+def settings_page():
+    st.header("Settings")
+    st.write(f"You are logged in as {st.session_state.role}.")

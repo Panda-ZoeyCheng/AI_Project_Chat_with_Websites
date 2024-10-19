@@ -165,6 +165,9 @@
 #     st.session_state["messages"] = []
 
 import streamlit as st
+from plotbot import plotbot_page
+from admin import admin_page
+from settings import settings_page
 
 if "role" not in st.session_state:
     st.session_state.role = None
@@ -182,30 +185,53 @@ def logout():
     st.session_state.role = None
     st.rerun()
 
-role = st.session_state.role
-
-logout_page = st.Page(logout, title="Log out", icon=":material/logout:")
-settings = st.Page("settings.py", title="Settings", icon=":material/settings:")
-plotbot_page = st.Page("plotbot/plotbot.py", title="PlotBot", icon=":material/bar_chart:", default=(role == "User"))
-admin_page = st.Page("admin/admin.py", title="Admin Panel", icon=":material/settings:", default=(role == "Admin"))
-
-account_pages = [logout_page, settings]
-user_pages = [logout_page, plotbot_page]
-admin_pages = [logout_page, admin_page]
-
-st.title("Dynamic Navigation Example")
-
-page_dict = {}
-
-if st.session_state.role == "User":
-    page_dict["User"] = user_pages
-if st.session_state.role == "Admin":
-    page_dict["Admin"] = admin_pages
-
-if len(page_dict) > 0:
-    pg = st.navigation({"Account": account_pages} | page_dict)
+if st.session_state.role is None:
+    login()
 else:
-    pg = st.navigation([st.Page(login)])
+    st.title(f"Welcome, {st.session_state.role}")
+# role = st.session_state.role
+    if st.sidebar.button("Log out"):
+        logout()
 
 
-pg.run()
+    if st.session_state.role == "User":
+        page = st.sidebar.radio("Navigation", ["PlotBot", "Settings"])
+
+        if page == "PlotBot":
+            plotbot_page()
+        elif page == "Settings":
+            settings_page()
+    
+    elif st.session_state.role == "Admin":
+        page = st.sidebar.radio("Navigation", ["Admin Panel", "Settings"])
+
+        if page == "Admin Panel":
+            admin_page()
+        elif page == "Settings":
+            settings_page()
+
+# logout_page = st.Page(logout, title="Log out", icon=":material/logout:")
+# settings = st.Page("settings.py", title="Settings", icon=":material/settings:")
+# plotbot_page = st.Page("plotbot/plotbot.py", title="PlotBot", icon=":material/bar_chart:", default=(role == "User"))
+# admin_page = st.Page("admin/admin.py", title="Admin Panel", icon=":material/settings:", default=(role == "Admin"))
+
+# account_pages = [logout_page, settings]
+# user_pages = [logout_page, plotbot_page]
+# admin_pages = [logout_page, admin_page]
+
+# st.title("Dynamic Navigation Example")
+
+# page_dict = {}
+
+# if st.session_state.role == "User":
+#     page_dict["User"] = user_pages
+# if st.session_state.role == "Admin":
+#     page_dict["Admin"] = admin_pages
+
+# if len(page_dict) > 0:
+#     pg = st.navigation({"Account": account_pages} | page_dict)
+# else:
+#     pg = st.navigation([st.Page(login)])
+
+
+# pg.run()
