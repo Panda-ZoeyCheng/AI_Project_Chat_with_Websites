@@ -1,4 +1,4 @@
-import stramlit as st
+import streamlit as st
 
 def settings_page():
     st.header("Settings")

@@ -12,13 +12,10 @@ import plotly.express as px
 
 def plotbot_page():
 
-    st.header("User")
-    st.write(f"You are logged in as {st.session_state.role}.")
+    st.header("PlotBot")
+    # st.write(f"You are logged in as {st.session_state.role}.")
 
     openai.api_key = st.secrets["OPENAI_API_KEY"]
-
-    st.set_page_config(page_title="PlotBot", page_icon=":robot_face:")
-    st.markdown("<h1 style='text-align: center;'>PlotBot</h1>", unsafe_allow_html=True)
 
     # Set a default model
     if "openai_model" not in st.session_state:
@@ -100,7 +97,8 @@ def plotbot_page():
         try:
             exec(plot_code, {'df': df, 'px': px}, exec_locals)
             if "fig" in exec_locals:
-                return exec_locals["fig"]
+                fig = exec_locals["fig"]
+                return fig
             else:
                 return None
         except Exception as e:

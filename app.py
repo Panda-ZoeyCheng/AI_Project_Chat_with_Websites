@@ -169,6 +169,8 @@ from plotbot.plotbot import plotbot_page
 from admin.admin import admin_page
 from settings import settings_page
 
+st.set_page_config(page_title="PlotBot", page_icon=":robot_face:")
+
 if "role" not in st.session_state:
     st.session_state.role = None
 
