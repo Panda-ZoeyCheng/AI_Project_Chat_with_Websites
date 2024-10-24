@@ -90,6 +90,7 @@ def show_tips():
             3. **Interactive chart**: PlotBot will analyze the data and generate an interactive plot for you.
 
             You can ask for different types of plots based on the data, and PlotBot will attempt to create the corresponding visualizations.
+            
             *Note: Currently, this tool only supports CSV files with numeric data.*
             """)
         
