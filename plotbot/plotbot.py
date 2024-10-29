@@ -56,11 +56,27 @@ def handle_file_upload():
     upload_file = st.sidebar.file_uploader("Upload CSV file", type="csv", key="unique_file_uploader_1")
 
     if upload_file is not None:
-        df = pd.read_csv(upload_file)
-        st.session_state["df"] = df
-        st.session_state["uploaded_file"] = True
-        st.sidebar.write("Uploaded CSV Data Preview:")
-        st.sidebar.write(df.head()) 
+        # Define a list of potential delimiters
+        delimiters = [',', ';', '\t', ' ', '|', ':']
+
+        for delimiter in delimiters:
+            try:
+                upload_file.seek(0)  # Reset file pointer to the beginning
+                df = pd.read_csv(upload_file, delimiter=delimiter)
+                if df.shape[1] > 1:  # Check if multiple columns were found
+                    # If successful, update the session states
+                    st.session_state['df'] = df  
+                    st.session_state["uploaded_file"] = True
+                    st.sidebar.write("Uploaded CSV Data Preview:")
+                    st.sidebar.write(df.head()) 
+                    break  # Exit the loop if no errors
+            except pd.errors.ParserError:
+                continue  # Try the next delimiter if there's a parser error
+
+        else:
+            # If all delimiters fail, handle the error (optional)
+            st.error('Failed to read file. Please check the file format.')
+
 
         # return df.dtypes.to_string()
     else:
