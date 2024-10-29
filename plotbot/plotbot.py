@@ -101,7 +101,7 @@ def show_llm_params():
 
 def initialize_state():
     if "openai_model" not in st.session_state:
-        st.session_state["openai_model"] = "gpt-3.5-turbo"
+        st.session_state["openai_model"] = "gpt-4o-mini"
 
     if "messages" not in st.session_state:
         st.session_state["messages"] = [
@@ -184,7 +184,7 @@ def generate_plot_code(df, user_request, schema):
     
     try:
         response = openai.chat.completions.create(
-            model="gpt-3.5-turbo",
+            model=st.session_state["openai_model"],
             messages=[
                 {"role": "system", "content": "You are a helpful assistant."},
                 {"role": "user", "content": prompt}
